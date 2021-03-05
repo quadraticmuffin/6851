@@ -19,17 +19,15 @@ Notes:
 	- More details on the structure below (line 64).
 '''
 
+###########################################################
+# Support for stacks comes from nested "pairs".
+
 def pair(x, y=None):
 	if y == None:
 		return (x, y, 1)
 	else:
 		_, _, ylen = y
 	return (x, y, ylen + 1) 
-
-def _chain(iter):
-	if not iter:
-		return None
-	return pair(iter[-1], _chain(iter[:-1]))
 
 def pLen(p):
 	if p is None:
@@ -63,7 +61,7 @@ def pMoveK(s, t, k):
 	else:
 		return pMoveK(*pMove(s, t), k-1)
 
-##################################################################################################
+###########################################################
 SPEED = 2
 
 qInit = lambda: (None, None, None, 0)
