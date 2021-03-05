@@ -1,7 +1,22 @@
 '''
 Demonstration of a functionally implemented FIFO queue.
-Written in Python because I don't know any functional languages yet.
 Supports O(1) append at front and delete from back.
+Usage: Simply run this python file ('python3 ps2.py') to see a demo 
+	as well as time comparison of operations on small vs large queues.
+	To experiment yourself, run in interactive mode ('python3 -i ps2.py')
+	and call the function: _qExample(s), where s should be a string containing
+	only 'a' and 'd', representing appends and deletes.
+Notes:
+	- Written in Python because I don't know any functional languages yet,
+		but I think it fits in a functional paradigm. I only use immutable
+		objects, and 
+	- functions starting with an underscore are convenience functions
+		(e.g. for printing output); they don't count when evaluating
+		whether this implementation is purely functional.
+	- Implemented by maintaining two stacks, the 'right' stack to which elements
+		are appended, and the 'left' stack from which elements are deleted.
+		Elements are shifted from right to left if right becomes bigger.
+	- More details on the structure below (line 64).
 '''
 
 def pair(x, y=None):
@@ -52,13 +67,19 @@ def pMoveK(s, t, k):
 SPEED = 2
 
 qInit = lambda: (None, None, None, 0)
-''' q contains:
+''' 
+q contains:
  - left stack
  - right stack
  - memoized arrays used under-the-hood to perform shifts from right to left stack
 	- tempL, revL: keeps track of the reversal of left stack (interm. result stored in revL)
 	- rempR, revR: same for right stack
  - number of deletes that have happened since the most recent qShift was initiated
+The function qShift does all the hard work. It:
+ - Reverses left and right
+ - Concatenates the reversed left to the reversed right, un-reversing it in the process
+ - Does the previous two operations only a little bit at a time, storing the interm. results
+ 	to ensure O(1) worst-case runtime.
 '''
 def qLen(q):
 	left, right, _, _ = q
